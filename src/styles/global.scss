@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap');
+
+
+// variaveis
+// $color-primary: #8FC74A;
+$color-primary: #6E38F7;
+$color-secundary: #313A60;
+$color-light: #BDBFC1;
+$color-bg: #EBEBEB;
+$black: #333333;
+$light-gray: #79869F;
+
+$color-alert: #EA3A3D;
+$color-success: #1AD598;
+$color-warning: #F9B959;
+
+a, a:visited {
+  text-decoration: none;
+  color: inherit;
+}
+
+.component-content {
+  margin-left: 290px;
+}
+
+// override vuetify
+.v-text-field .v-input__control, .v-text-field .v-input__slot, .v-text-field fieldset {
+  border-radius: 2px !important;
+}
+
+.v-input__slot fieldset {
+  background-color: #FCFCFD;
+}

@@ -1,0 +1,184 @@
+#dashboard {
+  header {
+    display: flex;
+    flex-direction: row;
+    font-family: 'Raleway', sans-serif;
+    color: #313A60;
+    font-weight: 700;
+    font-size: 24px;
+    cursor: default;
+
+    .v-icon {
+      margin-left: 12px;
+      color: #313A60;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .v-icon:hover {
+      color: #8FC74A;
+      transition: all .2s;
+    }
+  }
+
+  #plans {
+    padding: 16px;
+    padding-bottom: 35px;
+    border: 1px solid #E0E1F2;
+    border-radius: 16px;
+    overflow: auto;
+    width: calc(100% - 25px);
+  }
+
+  .plans-table {
+    margin-top: 30px;
+    .table-header {
+      display: flex;
+      flex-direction: row;
+      cursor: default;
+      font-family: 'Rubik', sans-serif;
+      font-weight: 400;
+      color: #79869F;
+      font-size: 14px;
+      margin-left: 200px;
+
+      .h-item {
+        line-height: 18px;
+        width: 80px;
+        text-align: center;
+        align-self: center;
+        .i-item {
+          width: 80px;
+        }
+      }
+    }
+
+    .table-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .t-item {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      margin-top: 30px;
+
+      .i-title {
+        width: 200px;
+        align-self: center;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 400;
+        color: #79869F;
+        font-size: 16px;
+        cursor: default;
+        .t-title {
+          width: 200px;
+        }
+      }
+      .i-modal {
+        display: flex;
+        //padding: 8px;
+        min-width: 40px;
+        margin-left: 20px;
+        margin-right: 20px;
+        border-radius: 30px;
+        .i-icon {
+          .v-icon {
+            color: #313A60;
+          }
+        }
+      }
+      .i-modal2 {
+        display: flex;
+        padding: 8px;
+        width: 40px;
+        border-radius: 30px;
+        cursor: pointer;
+      }
+      .i-courses { background-color: #FFCCEA; transition: all .2s; }
+      .i-courses:hover { background-color: #00000038; transition: all .2s; }
+      .i-books { background-color: #CCE0FF; transition: all .2s; }
+      .i-books:hover { background-color: #00000038; transition: all .2s; }
+      .i-videos { background-color: #CCD4FF; transition: all .2s; }
+      .i-videos:hover { background-color: #00000038; transition: all .2s; }
+      .i-podcasts { background-color: #CDFFCC; transition: all .2s; }
+      .i-podcasts:hover { background-color: #00000038; transition: all .2s; }
+      .i-articles { background-color: #FFCCCC; transition: all .2s; }
+      .i-articles:hover { background-color: #00000038; transition: all .2s; }
+      .i-projects { background-color: #E2CCFF; transition: all .2s; }
+      .i-projects:hover { background-color: #00000038; transition: all .2s; }
+
+      .i-hours {
+        display: flex;
+        align-self: center;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all .2s;
+        margin-left: 10px;
+        margin-right: 10px;
+        color: #363940;
+
+        .v-icon {
+          margin-right: 8px;
+          margin-top: -1px;
+        }
+      }
+      .i-hours:hover {
+        color: #8FC74A;
+        .v-icon {
+          color: #8FC74A;
+        }
+      }
+
+      .i-stars {
+        margin-left: 15px;
+        margin-right: 10px;
+        margin-top: -7px;
+        .v-rating .v-icon {
+          padding-left: 0px !important;
+          padding-right: 0px !important;
+        }
+      }
+
+      .i-project-hours {
+        display: flex;
+        align-self: center;
+        text-align: center;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        color: #79869F;
+        cursor: default;
+        margin-left: 25px;
+        margin-right: 30px;
+      }
+
+      .i-progress {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        min-width: 200px;
+        margin-left: 10px;
+        margin-right: 10px;
+        
+        .v-progress-linear {
+          height: 7px !important;
+          border-radius: 8px;
+        }
+
+        span {
+          margin-left: 15px;
+          font-family: 'Rubik', sans-serif;
+          font-weight: 300;
+          font-size: 16px;
+          color: #79869F;
+          cursor: default;
+        }
+      }
+    }
+  }
+}

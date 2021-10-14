@@ -1,0 +1,64 @@
+header {
+  width: calc(100vw - 300px);
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 40px;
+  padding-top: 25px;
+  margin-bottom: 25px;
+}
+
+.user-menu {
+  .u-photo {
+    img {
+      height: 45px;
+      border-radius: 100px;
+      width: 45px;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+  }
+  .u-content {
+    display: flex;
+    flex-direction: row;
+
+    .u-details {
+      display: flex;
+      flex-direction: column;
+      margin-right: 5px;
+      .u-name {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+        color: #313A60;
+        font-size: 18px;
+      }
+      .u-role {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+        color: #979797;
+        font-size: 14px;        
+      }
+    }
+    .u-icon {
+      .v-icon {
+        color: #8FC74A !important;
+      }
+    }
+  }
+}
+
+/* override vuetify */
+.v-list-item {
+  min-height: 36px;
+}
+.v-menu__content {
+  box-shadow: none;
+}
+.v-sheet.v-list:not(.v-sheet--outlined) {
+  background: #F2F2F2;
+  border-radius: 12px;
+  margin-top: 5px;
+}
+
+.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+  color: #363636 !important;
+}

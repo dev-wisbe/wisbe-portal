@@ -8,7 +8,7 @@
               class="image-logo"
               @click="$router.push('/')"
               width="194"
-              :src="require('../assets/wisbe-logo-text.png')"
+              :src="require('@/assets/wisbe-logo-text.png')"
             />
           </div>
           <h1>Bem vindo de volta a Wisbe</h1>
@@ -45,15 +45,19 @@
             depressed
             color="#6E38F7"
             @click="submitLogin"
+            :loading="userLoading"
+            :disabled="userLoading"
           >
-            <span v-if="!loading">Acessar</span>
+            <span v-if="!userLoading">Acessar</span>
           </v-btn>
           <v-btn
             text
             color="#6E38F7"
             @click="checkForm(0)"
+            :loading="userLoading"
+            :disabled="userLoading"
           >
-            <span v-if="!loading">Esqueci a senha</span>
+            <span v-if="!userLoading">Esqueci a senha</span>
           </v-btn>
         </div>
 
@@ -82,6 +86,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Login",
@@ -91,7 +96,6 @@ export default {
       username: "",
       password: "",
     },
-    loading: false,
     snackbar: {
       visible: false,
       message: '',
@@ -106,6 +110,9 @@ export default {
     }
   }),
   methods: {
+    ...mapActions('authentication', [
+      'submitUser',
+    ]),
     async validateForm() {
       if (!this.auth.username || !this.auth.password) {
         this.handleSnackbar('error', this.messageInfo.emptyField)
@@ -115,16 +122,29 @@ export default {
       return true
     },
     async submitLogin() {
-      const isValid = await this.validateForm();
-      if(isValid) {
-        this.handleSnackbar('success', this.messageInfo.successLogin)
-      }
+      const isValid = await this.validateForm()
+      if (!isValid) return
+
+      const { username, password } = this.auth
+      try {
+          await this.submitUser({username, password})
+          this.handleSnackbar('success', this.messageInfo.successLogin)
+          this.$router.push('/dashboard')
+        } catch (error) {
+          console.log(error)
+        }
     },
     handleSnackbar(type, message) {
       this.snackbar.message = message
       this.snackbar.type = type
       this.snackbar.visible = true
     }
+  },
+  computed: {
+    ...mapGetters('authentication', [
+      'user',
+      'userLoading',
+    ])
   }
 };
 

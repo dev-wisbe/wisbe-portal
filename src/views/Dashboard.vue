@@ -1,7 +1,43 @@
 <template>
   <v-app id="dashboard">
+    <v-app-bar
+      id="app-bar"
+      app
+      color="#6E38F7"
+      flat
+      style="height: 80px;"
+    >
+      <v-container class="py-0 fill-height">
+        <v-avatar
+          class="mr-10"
+          color="grey"
+          size="32"
+        ></v-avatar>
+
+        <v-btn
+          color="#fff"
+          v-for="link in links"
+          :key="link"
+          text
+        >
+          {{ link }}
+        </v-btn>
+
+        <v-spacer></v-spacer>
+
+        <v-responsive max-width="260">
+          <v-text-field
+            dense
+            flat
+            hide-details
+            rounded
+            solo-inverted
+          ></v-text-field>
+        </v-responsive>
+      </v-container>
+    </v-app-bar>
     <v-main class="grey lighten-3">
-      <v-container style="margin-top: 20px">
+      <v-container style="margin-top: 90px">
         <v-row>
           <v-col cols="2">
             <v-sheet rounded="lg">
@@ -39,7 +75,7 @@
               min-height="100vh"
               rounded="lg"
             >
-              <!--  -->
+              teste
             </v-sheet>
           </v-col>
         </v-row>

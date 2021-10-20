@@ -1,17 +1,13 @@
 <template>
   <v-app>
     <div id="app">
-      <!-- Logado !-->
       <div v-if="loggedIn">
-        <Header />
-        <Dashboard />
+        <!-- <Dashboard /> -->
         <router-view />
       </div>
 
-      <!-- Deslogado !-->
       <keep-alive class="dashboard" v-else>
         <component :is="componentRender" />
-        <!-- <Login /> -->
       </keep-alive>
     </div>
   </v-app>
@@ -21,9 +17,9 @@
 import { mapState } from "vuex";
 import Header from "@/components/Header.vue";
 import Amplify from "aws-amplify";
-import Login from "@/views/Login.vue";
+import Login from "@/views/Authentication/Login.vue";
 import Portal from "@/views/Portal.vue";
-import Register from "@/views/Register.vue";
+import Register from "@/views/Authentication/Register.vue";
 import Dashboard from "@/views/Dashboard.vue";
 
 export default {
@@ -45,9 +41,12 @@ export default {
   },
 
   computed: {
+    // ...mapGetters('authentication', [
+    //   'loggedIn',
+    // ]),
     // ou isUserLoggedIn: (state) => state.authStore.loggedIn
     ...mapState({
-      loggedIn: (state) => state.authStore.loggedIn,
+      loggedIn: (state) => state.authentication.loggedIn,
     }),
     componentRender() {
       const { name } = this.$route;
@@ -61,36 +60,19 @@ export default {
 
 Amplify.configure({
   Auth: {
-    identityPoolId: "us-east-2:ade7f790-c753-4ed9-b284-37e4dc64005c", //REQUIRED - Amazon Cognito Identity Pool ID
-    region: "us-east-2", // REQUIRED - Amazon Cognito Region
-    userPoolId: "us-east-2_m0DBnsew1", //OPTIONAL - Amazon Cognito User Pool ID
-    userPoolWebClientId: "i2os6sbepglcbnc0cdv3fnslt", //OPTIONAL - Amazon Cognito Web Client ID
+    identityPoolId: "us-east-1:aee7b253-17cc-46e8-a8c4-5639a74cf3a3",
+    region: "us-east-1",
+    identityPoolRegion: 'us-east-1',
+    userPoolId: "us-east-1_PbdoXH2FU",
+    userPoolWebClientId: "2see6lqum408pr8j41sjr0pr34",
+    mandatorySignIn: false,
+    authenticationFlowType: 'USER_PASSWORD_AUTH',
   },
   API: {
     endpoints: [
       {
         name: "users",
-        endpoint: "https://uhj84cv5k0.execute-api.us-east-2.amazonaws.com/prod",
-      },
-      {
-        name: "students",
-        endpoint: "https://ocuuud0qz9.execute-api.us-east-2.amazonaws.com/prod",
-      },
-      {
-        name: "courses",
-        endpoint: "https://6651c2stzk.execute-api.us-east-2.amazonaws.com/prod",
-      },
-      {
-        name: "institution",
-        endpoint: "https://oenlbvrqp5.execute-api.us-east-2.amazonaws.com/prod",
-      },
-      {
-        name: "themes",
-        endpoint: "https://wmkx5c0i1g.execute-api.us-east-2.amazonaws.com/prod",
-      },
-      {
-        name: "medias",
-        endpoint: "https://1w7y3ohxj8.execute-api.us-east-2.amazonaws.com/prod",
+        endpoint: "https://shj84cv5k0.execute-api.us-east-1.amazonaws.com/prod",
       },
     ],
   },

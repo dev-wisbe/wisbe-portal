@@ -7,7 +7,7 @@
             <img
               class="image-logo"
               width="194"
-              :src="require('../assets/wisbe-logo-text.png')"
+              :src="require('@/assets/wisbe-logo-text.png')"
               @click="$router.push('/')"
             />
           </div>
@@ -49,7 +49,7 @@
             label="Confirmar Senha"
             outlined
             color="#6E38F7"
-            type="confirmPassword"
+            type="password"
             v-model="auth.confirmPassword"
             :rules="[(v) => !!v || 'Confirmação de senha obrigatória']"
             required
@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import { Auth } from 'aws-amplify';
 
 export default {
   name: "register",
@@ -103,7 +104,7 @@ export default {
       fullname: "",
       username: "",
       password: "",
-      confirmPassord: "",
+      confirmPassword: "",
     },
     loading: false,
     snackbar: {
@@ -128,8 +129,19 @@ export default {
       }
     },
     async submitRegister() {
+      const { username, fullname, password } = this.auth;
       await this.checkForm()
-      console.log('submit')
+
+      const payload = {
+        username,
+        password,
+        attributes: {
+            name: fullname
+        }
+      }
+
+      const res = await Auth.signUp(payload);
+      console.log(res);
     }
   }
 };

@@ -9,6 +9,11 @@ export default {
 
     return userLoading
   },
+  authLoading: (state) => {
+    const { authLoading } = state
+    
+    return authLoading
+  },
   isUserLoggedIn(state) {
     return state.loggedIn;
   },

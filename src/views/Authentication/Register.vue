@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { Auth } from 'aws-amplify';
+import { mapActions } from 'vuex';
 
 export default {
   name: "register",
@@ -117,31 +117,52 @@ export default {
       invalidUserPassword: 'Usuário ou senha incorretos',
       wrongPasswordConfirmation: 'Senhas não conferem',
       successRegister: 'Cadastro Realizado com sucesso',
+      registerError: 'Houve um erro ao tentar registrar.'
     }
   }),
   methods: {
-    checkForm() {
+    ...mapActions('authentication', [
+      'submitRegister',
+    ]),
+    async validateForm() {
       const { fullname, username, password, confirmPassword } = this.auth
       if (!fullname || !username || !password || !confirmPassword) {
         this.snackbar.message = this.messageInfo.emptyField;
         this.snackbar.type ='error';
         this.snackbar.visible = true;
+
+        return false;
       }
+
+      return true;
     },
     async submitRegister() {
       const { username, fullname, password } = this.auth;
-      await this.checkForm()
-
-      const payload = {
-        username,
-        password,
-        attributes: {
+      const isValid = await this.validateForm()
+      if (isValid) {
+        const payload = {
+          username,
+          password,
+          attributes: {
             name: fullname
+          }
         }
+        try {
+          const res = await this.submitRegister(payload)
+          console.log(res);
+          this.snackbar.message = this.messageInfo.successRegister;
+          this.snackbar.type ='success';
+          this.snackbar.visible = true;
+          setTimeout(() => {
+            this.$router.push('/login')
+          }, 2000)
+        } catch (error) {
+          this.snackbar.message = this.messageInfo.registerError;
+          this.snackbar.type ='error';
+          this.snackbar.visible = true;
+        }
+        
       }
-
-      const res = await Auth.signUp(payload);
-      console.log(res);
     }
   }
 };

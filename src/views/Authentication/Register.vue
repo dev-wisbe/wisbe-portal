@@ -24,6 +24,7 @@
             color="#6E38F7"
             type="email"
             v-model="auth.fullname"
+            :disabled="authLoading"
             :rules="[(v) => !!v || 'Nome obrigatório']"
             required
           />
@@ -33,6 +34,7 @@
             color="#6E38F7"
             type="email"
             v-model="auth.username"
+            :disabled="authLoading"
             :rules="[(v) => !!v || 'E-mail obrigatório']"
             required
           />
@@ -42,6 +44,7 @@
             color="#6E38F7"
             type="password"
             v-model="auth.password"
+            :disabled="authLoading"
             :rules="[(v) => !!v || 'Senha obrigatória']"
             required
           />
@@ -51,6 +54,7 @@
             color="#6E38F7"
             type="password"
             v-model="auth.confirmPassword"
+            :disabled="authLoading"
             :rules="[(v) => !!v || 'Confirmação de senha obrigatória']"
             required
           />
@@ -61,9 +65,10 @@
             block
             depressed
             color="#6E38F7"
-            @click="submitRegister"
+            :disabled="authLoading"
+            @click="submitForm"
           >
-            <span v-if="!loading">Cadastrar</span>
+            <span v-if="!authLoading">Cadastrar</span>
           </v-btn>
         </div>
 
@@ -94,7 +99,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: "register",
@@ -106,7 +111,6 @@ export default {
       password: "",
       confirmPassword: "",
     },
-    loading: false,
     snackbar: {
       visible: false,
       message: '',
@@ -120,6 +124,11 @@ export default {
       registerError: 'Houve um erro ao tentar registrar.'
     }
   }),
+  computed: {
+    ...mapGetters('authentication', [
+      'authLoading'
+    ]),
+  },
   methods: {
     ...mapActions('authentication', [
       'submitRegister',
@@ -136,7 +145,7 @@ export default {
 
       return true;
     },
-    async submitRegister() {
+    async submitForm() {
       const { username, fullname, password } = this.auth;
       const isValid = await this.validateForm()
       if (isValid) {
@@ -147,6 +156,7 @@ export default {
             name: fullname
           }
         }
+
         try {
           const res = await this.submitRegister(payload)
           console.log(res);

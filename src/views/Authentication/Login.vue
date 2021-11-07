@@ -41,24 +41,18 @@
 
         </div>
         <div class="auth-actions">
-          <v-btn
-            depressed
-            color="#6E38F7"
+          <Button
+            title="Acessar"
             @click="submitLogin"
-            :loading="userLoading"
-            :disabled="userLoading"
-          >
-            <span>Acessar</span>
-          </v-btn>
-          <v-btn
-            text
-            color="#6E38F7"
+            :isLoading="loading"
+            :isDisabled="loading"
+          />
+          <Button
+            title="Esqueci a senha"
+            variation="secondary"
             @click="checkForm(0)"
-            :loading="userLoading"
-            :disabled="userLoading"
-          >
-            <span>Esqueci a senha</span>
-          </v-btn>
+            :isDisabled="loading"
+          />
         </div>
 
         <div class="login-links">
@@ -87,11 +81,16 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import Button from '@/components/Button/Button.vue';
+import {errors} from '../../utils/relatedErrors'
 
 export default {
   name: "Login",
-
+  components: {
+    Button,
+  },
   data: () => ({
+    loading: false,
     auth: {
       username: "",
       password: "",
@@ -113,7 +112,12 @@ export default {
     ...mapActions('authentication', [
       'submitUser',
       'setLoggedIn',
+      'setRegisterEmail',
     ]),
+    handleCodeValidation() {
+      this.setRegisterEmail({username: this.auth.username, password: this.auth.password})
+      this.$router.push('./validationCode')
+    },
     async validateForm() {
       if (!this.auth.username || !this.auth.password) {
         this.handleSnackbar('error', this.messageInfo.emptyField)
@@ -123,17 +127,28 @@ export default {
       return true
     },
     async submitLogin() {
+      this.loading = true;
+      let success = true;
       const isValid = await this.validateForm()
       if (!isValid) return
 
       const { username, password } = this.auth
       try {
           await this.submitUser({username, password})
-          this.handleSnackbar('success', this.messageInfo.successLogin)
-          await this.setLoggedIn()
-          this.$router.push('/dashboard')
-        } catch (error) {
-          console.log(error)
+        } catch ({ code }) {
+          success = false;
+          this.handleSnackbar('error', errors[code].message)
+          if(errors[code].action) {
+            const action = `handle${errors[code].action}`
+            this[action]();
+          }
+        } finally {
+          if(success) {
+            await this.setLoggedIn()
+            this.$router.push('/dashboard')
+            this.handleSnackbar('success', this.messageInfo.successLogin)
+          }
+          this.loading = false;
         }
     },
     handleSnackbar(type, message) {
@@ -145,7 +160,6 @@ export default {
   computed: {
     ...mapGetters('authentication', [
       'user',
-      'userLoading',
     ])
   }
 };

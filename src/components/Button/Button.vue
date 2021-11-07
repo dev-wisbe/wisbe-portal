@@ -5,6 +5,7 @@
     :text="variation === 'secondary'"
     :class="`button-${variation}`"
     :disabled="isDisabled"
+    :loading="isLoading"
     @click="$emit('click')"
   >
     <span class="button-name">{{ title }}</span>
@@ -26,6 +27,11 @@ export default {
       default: 'primary'
     },
     isDisabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    isLoading: {
       type: Boolean,
       required: false,
       default: false,

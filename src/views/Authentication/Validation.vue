@@ -56,7 +56,7 @@
           />
         </div>
         <div class="button-action">
-          <Button title="Enviar" variation="primary" :isDisabled="false" @click="sendCode" />
+          <Button :loading="authLoading" title="Enviar" variation="primary" :isDisabled="false" @click="sendCode" />
           <Button title="Reenviar código" variation="secondary" :isDisabled="false" />
         </div>
       </div>
@@ -114,7 +114,8 @@ export default {
   computed: {
     ...mapGetters('authentication', [
       'authLoading',
-      'getRegisterEmail'
+      'getRegisterEmail',
+      'authLoading'
     ]),
     codeNumber() {
       return `${this.firstDigit}${this.secondDigit}${this.thirdDigit}${this.fourthDigit}${this.fifthDigit}${this.sixthDigit}`
@@ -123,6 +124,7 @@ export default {
   methods: {
     ...mapActions('authentication', [
       'submitRegister',
+      'setLoggedIn',
     ]),
     handleSnackbar(status) {
       const infoMessage = `${status}Register`
@@ -145,12 +147,12 @@ export default {
     },
     async login() {
       try {
-        await Auth.login(
+        await Auth.signIn(
           this.getRegisterEmail.username,
           this.getRegisterEmail.password
         );
         await this.setLoggedIn()
-      this.$router.push('/dashboard')
+        this.$router.push('/dashboard')
       } catch (error) {
         console.log(error)
       }
@@ -232,7 +234,7 @@ $breakpoint-laptop: 1250px
   .auth-input
     margin-top: 30px
     display: grid
-    grid-template-columns: repeat(4, 50px)
+    grid-template-columns: repeat(6, 50px)
     grid-gap: 10px
     place-content: center
 

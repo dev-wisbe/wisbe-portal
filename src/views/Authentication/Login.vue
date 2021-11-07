@@ -48,7 +48,7 @@
             :loading="userLoading"
             :disabled="userLoading"
           >
-            <span v-if="!userLoading">Acessar</span>
+            <span>Acessar</span>
           </v-btn>
           <v-btn
             text
@@ -57,7 +57,7 @@
             :loading="userLoading"
             :disabled="userLoading"
           >
-            <span v-if="!userLoading">Esqueci a senha</span>
+            <span>Esqueci a senha</span>
           </v-btn>
         </div>
 
@@ -112,6 +112,7 @@ export default {
   methods: {
     ...mapActions('authentication', [
       'submitUser',
+      'setLoggedIn',
     ]),
     async validateForm() {
       if (!this.auth.username || !this.auth.password) {
@@ -129,6 +130,7 @@ export default {
       try {
           await this.submitUser({username, password})
           this.handleSnackbar('success', this.messageInfo.successLogin)
+          await this.setLoggedIn()
           this.$router.push('/dashboard')
         } catch (error) {
           console.log(error)

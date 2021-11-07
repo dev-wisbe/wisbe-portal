@@ -81,12 +81,18 @@
         </v-row>
       </v-container>
     </v-main>
+    <ConfirmUserType />
   </v-app>
 </template>
 
 <script>
+import ConfirmUserType from '../components/ConfirmUserType/ConfirmUserType.vue';
+
   export default {
     name: 'Dashboard',
+    components: {
+      ConfirmUserType,
+    },
     data: () => ({
       links: [
         'Dashboard',

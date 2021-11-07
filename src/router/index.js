@@ -26,6 +26,11 @@ const routes = [
     name: "Login",
     component: () => import("../views/Authentication/Login.vue"),
   },
+  {
+    path: "/validationCode",
+    name: "Validation",
+    component: () => import("../views/Authentication/Validation.vue"),
+  },
 ];
 
 const router = new VueRouter({

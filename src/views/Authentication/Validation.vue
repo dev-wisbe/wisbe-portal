@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <div id="register">
-      <div class="register-box">
-        <div class="register-title">
+    <div id="code-validation">
+      <div class="code-validation-box">
+        <div class="code-validation-title">
           <div class="logo">
             <img
               class="image-logo"
@@ -15,67 +15,49 @@
           <h3>
             Comece a aprender o que você quiser junto com a Wisbe.
           </h3>
+          <h3 class="code-info">Entre com o codigo recebido no e-mail</h3>
         </div>
-
         <div class="auth-input">
           <v-text-field
-            label="Nome Completo"
+            style="font-size: 32px;"
             outlined
-            color="#6E38F7"
-            type="email"
-            v-model="auth.fullname"
-            :disabled="authLoading"
-            :rules="[(v) => !!v || 'Nome obrigatório']"
-            required
+            v-model="firstDigit"
+            ref="firstInput"
           />
           <v-text-field
-            label="E-mail"
+            style="font-size: 32px;"
             outlined
-            color="#6E38F7"
-            type="email"
-            v-model="auth.username"
-            :disabled="authLoading"
-            :rules="[(v) => !!v || 'E-mail obrigatório']"
-            required
+            v-model="secondDigit"
+            ref="secondInput"
           />
           <v-text-field
-            label="Senha"
+            style="font-size: 32px;"
             outlined
-            color="#6E38F7"
-            type="password"
-            v-model="auth.password"
-            :disabled="authLoading"
-            :rules="[(v) => !!v || 'Senha obrigatória']"
-            required
+            v-model="thirdDigit"
+            ref="thirdInput"
           />
           <v-text-field
-            label="Confirmar Senha"
+            style="font-size: 32px;"
             outlined
-            color="#6E38F7"
-            type="password"
-            v-model="auth.confirmPassword"
-            :disabled="authLoading"
-            :rules="[(v) => !!v || 'Confirmação de senha obrigatória']"
-            required
+            v-model="fourthDigit"
+            ref="fourthInput"
           />
-
+          <v-text-field
+            style="font-size: 32px;"
+            outlined
+            v-model="fifthDigit"
+            ref="fifthInput"
+          />
+          <v-text-field
+            style="font-size: 32px;"
+            outlined
+            v-model="sixthDigit"
+            ref="sixthInput"
+          />
         </div>
-        <div class="register-actions">
-          <v-btn
-            block
-            depressed
-            color="#6E38F7"
-            :disabled="authLoading"
-            @click="submitForm"
-          >
-            <span v-if="!authLoading">Cadastrar</span>
-          </v-btn>
-        </div>
-
-        <div class="register-links">
-          <p @click="$router.push('/login')">
-            Você já tem uma conta? <span class="click-link">Acessar</span>
-          </p>
+        <div class="button-action">
+          <Button title="Enviar" variation="primary" :isDisabled="false" @click="sendCode" />
+          <Button title="Reenviar código" variation="secondary" :isDisabled="false" />
         </div>
       </div>
 
@@ -100,17 +82,22 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import Button from '@/components/Button/Button.vue';
+import { Auth } from 'aws-amplify';
 
 export default {
-  name: "register",
-
+  components: {
+    Button,
+  },
+  name: "Validation",
   data: () => ({
-    auth: {
-      fullname: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-    },
+    firstDigit: null,
+    secondDigit: null,
+    thirdDigit: null,
+    fourthDigit: null,
+    fifthDigit: null,
+    sixthDigit: null,
+    currentInput: 'first',
     snackbar: {
       visible: false,
       message: '',
@@ -126,13 +113,16 @@ export default {
   }),
   computed: {
     ...mapGetters('authentication', [
-      'authLoading'
+      'authLoading',
+      'getRegisterEmail'
     ]),
+    codeNumber() {
+      return `${this.firstDigit}${this.secondDigit}${this.thirdDigit}${this.fourthDigit}${this.fifthDigit}${this.sixthDigit}`
+    }
   },
   methods: {
     ...mapActions('authentication', [
       'submitRegister',
-      'setRegisterEmail',
     ]),
     handleSnackbar(status) {
       const infoMessage = `${status}Register`
@@ -140,45 +130,49 @@ export default {
       this.snackbar.type = status;
       this.snackbar.visible = true;
     },
-    async validateForm() {
-      const { fullname, username, password, confirmPassword } = this.auth
-      if (!fullname || !username || !password || !confirmPassword) {
-        this.snackbar.message = this.messageInfo.emptyField;
-        this.snackbar.type ='error';
-        this.snackbar.visible = true;
-
-        return false;
-      }
-
-      return true;
-    },
-    async submitForm() {
+    async sendCode() {
+      const { getRegisterEmail, codeNumber } = this
       let status = 'success';
-      const { username, fullname, password } = this.auth;
-      const isValid = await this.validateForm()
-      if (isValid) {
-        const payload = {
-          username,
-          password,
-          attributes: {
-            name: fullname
-          }
-        }
-
-        try {
-          await this.submitRegister(payload)
-          this.setRegisterEmail({username, password})
-          this.$router.push('/validationCode')
-        } catch (error) {
-          status = 'error'
-          console.log(error.message)
-        } finally {
-          this.handleSnackbar(status)
-        }
-        
+      try {
+        await Auth.confirmSignUp(getRegisterEmail.username, codeNumber);
+        this.login();
+      } catch (error) {
+        status = 'error'
+        console.log(error.message)
+      } finally {
+        this.handleSnackbar(status)
+      }
+    },
+    async login() {
+      try {
+        await Auth.login(
+          this.getRegisterEmail.username,
+          this.getRegisterEmail.password
+        );
+        await this.setLoggedIn()
+      this.$router.push('/dashboard')
+      } catch (error) {
+        console.log(error)
       }
     }
-  }
+  },
+  watch: {
+    firstDigit() {
+      this.$refs.secondInput.$refs.input.focus()
+    },
+    secondDigit() {
+      this.$refs.thirdInput.$refs.input.focus()
+    },
+    thirdDigit() {
+      this.$refs.fourthInput.$refs.input.focus()
+    },
+    fourthDigit() {
+      this.$refs.fifthInput.$refs.input.focus()
+    },
+    fifthDigit() {
+      this.$refs.sixthInput.$refs.input.focus()
+    },
+  },
 };
 
 </script>
@@ -188,12 +182,12 @@ $breakpoint-tablet: 900px
 $breakpoint-mobile: 450px
 $breakpoint-laptop: 1250px
 
-#register
+#code-validation
   display: flex
   height: 100vh
   flex-direction: row
 
-.register-box
+.code-validation-box
   @media screen and (max-width: $breakpoint-tablet)
     width: 100%
 
@@ -209,7 +203,7 @@ $breakpoint-laptop: 1250px
     margin-top: 20px
     margin-bottom: 40px
 
-  .register-title
+  .code-validation-title
     text-align: center
     display: grid
     grid-template-rows: 1fr
@@ -231,15 +225,18 @@ $breakpoint-laptop: 1250px
       margin-top: 12px
       cursor: default
 
+    .code-info
+      color: rgba(0, 0, 0, 0.7)
+      margin-top: 30px
+
   .auth-input
-    margin-top: 70px
+    margin-top: 30px
+    display: grid
+    grid-template-columns: repeat(4, 50px)
+    grid-gap: 10px
+    place-content: center
 
-    .v-btn
-      width: 100%
-      color: white
-      margin-top: 15px
-
-  .register-links
+  .code-validation-links
     margin-top: 20px
     p
       font-family: 'Raleway', sans-serif
@@ -256,7 +253,7 @@ $breakpoint-laptop: 1250px
     @media screen and (max-width: $breakpoint-mobile)
       margin-bottom: 30px
 
-  .register-actions
+  .code-validation-actions
     display: grid
     grid-template-rows: 1fr
     grid-gap: 10px
@@ -278,4 +275,15 @@ $breakpoint-laptop: 1250px
 
 .image-logo:hover
   cursor: pointer
+
+.button-action
+  display: grid
+  grid-template-columns: 1fr 1fr
+  width: 70%
+  place-content: center
+  gap: 10px
+  margin: 20px auto
+
+  .send-button
+    color: #fff
 </style>

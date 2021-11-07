@@ -21,6 +21,7 @@ import Login from "@/views/Authentication/Login.vue";
 import Portal from "@/views/Portal.vue";
 import Register from "@/views/Authentication/Register.vue";
 import Dashboard from "@/views/Dashboard.vue";
+import Validation from "@/views/Authentication/Validation.vue"
 
 export default {
   name: "app",
@@ -30,10 +31,11 @@ export default {
     Portal,
     Register,
     Dashboard,
+    Validation,
   },
 
   data: () => ({
-    noLogonRequiredComponents: ["Portal", "Register"],
+    noLogonRequiredComponents: ["Portal", "Register", "Validation"],
   }),
 
   methods: {

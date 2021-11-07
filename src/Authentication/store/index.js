@@ -7,6 +7,11 @@ const state = {
   userLoading: false,
   authLoading: false,
   loggedIn: false,
+  submitRegister: null,
+  registerEmail: {
+    username: null,
+    password: null,
+  },
 }
 
 export default {

@@ -13,4 +13,10 @@ export default {
   [types.SET_LOGGED_IN](state) {
     state.loggedIn = !state.loggedIn
   },
+  [types.SET_REGISTER](state, submitRegister) {
+    state.submitRegister = submitRegister
+  },
+  [types.SET_REGISTER_EMAIL](state, registerEmail) {
+    state.registerEmail = registerEmail
+  },
 }
